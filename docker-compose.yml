@@ -1,0 +1,20 @@
+# Run Seiden's unmodified code on Tetris's datasets (R7.O3 comparison).
+# Seiden hard-codes /nethome/jbang36/seiden (its repository) and /srv/data/jbang36/{video_data,tasti_data} (inputs and
+# caches); this file mounts our paths there instead of editing the code.
+#   SEIDEN_DATA  host directory holding video_data/<dataset>/{video.mp4,tasti_labels.csv,manifest.json} and tasti_data/
+# Usage on ace:
+#   SEIDEN_DATA=/data/cwkt/data/polyis-cache/seiden \
+#     docker compose run --rm seiden --dataset caldot1-y05
+services:
+  seiden:
+    # Seiden's own environment (Dockerfile), not Tetris's image.
+    build: .
+    image: seiden-r7o3
+    working_dir: /nethome/jbang36/seiden
+    volumes:
+      - ./:/nethome/jbang36/seiden:ro
+      - ${SEIDEN_DATA}/video_data:/srv/data/jbang36/video_data:ro
+      - ${SEIDEN_DATA}/tasti_data:/srv/data/jbang36/tasti_data
+      # Seiden loads torchvision's pretrained ResNet-18 even with training off; keep the download across runs.
+      - ${SEIDEN_DATA}/torch_cache:/root/.cache/torch
+    entrypoint: ["python", "tetris_comparison/run.py"]
