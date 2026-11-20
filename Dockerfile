@@ -17,6 +17,9 @@ RUN pip install --no-cache-dir \
       tqdm==4.48.2 tabulate==0.8.7 \
       numpy==1.19.5 pandas==1.1.5 av==12.3.0 opencv-python-headless==4.5.1.48 Pillow==8.1.0
 
+# Test-only: runs tetris_comparison/test_run.py; Seiden's code never imports it.
+RUN pip install --no-cache-dir pytest==7.4.4
+
 # Seiden's repository and its vendored benchmarks (TASTI, BlazeIt, SWAG, SUPG), mounted here by docker-compose.yml.
 ENV PYTHONPATH=/nethome/jbang36/seiden:/nethome/jbang36/seiden/benchmarks/stanford/tasti:/nethome/jbang36/seiden/benchmarks/stanford/blazeit:/nethome/jbang36/seiden/benchmarks/stanford/swag_python:/nethome/jbang36/seiden/benchmarks/stanford/supg
 WORKDIR /nethome/jbang36/seiden
